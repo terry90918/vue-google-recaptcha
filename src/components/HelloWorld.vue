@@ -10,7 +10,7 @@
             </h1>
           </div>
           <div class="input-group">
-            <label for="email">email </label>
+            <label for="email">email</label>
             <input
               v-model="email"
               required
@@ -21,7 +21,7 @@
             />
           </div>
           <div class="input-group">
-            <label for="password">password </label>
+            <label for="password">password</label>
             <input
               required
               v-model="password"
@@ -33,7 +33,7 @@
             />
           </div>
           <div class="input-group">
-            <label for="password-confirmation">confirm password </label>
+            <label for="password-confirmation">confirm password</label>
             <input
               required
               type="password"
@@ -67,11 +67,11 @@
           </div>
         </form>
       </div>
-      <div class="successful-server-response-wrapper" v-cloak>
-        <div
-          v-show="sucessfulServerResponse"
-          class="successful-server-response"
-        >
+      <div
+        v-show="sucessfulServerResponse"
+        class="successful-server-response-wrapper"
+      >
+        <div class="successful-server-response">
           {{ sucessfulServerResponse }}
         </div>
       </div>
@@ -80,69 +80,67 @@
 </template>
 
 <script>
-import axios from "axios";
-import VueRecaptcha from "vue-recaptcha";
+import axios from 'axios'
+import VueRecaptcha from 'vue-recaptcha'
 
 export default {
-  name: "HelloWorld",
+  name: 'HelloWorld',
   props: {
-    msg: String
+    msg: String,
   },
   components: {
-    VueRecaptcha
+    VueRecaptcha,
   },
   data() {
     return {
-      email: "",
-      password: "",
-      passwordConfirmation: "",
-      status: "",
-      sucessfulServerResponse: "",
-      serverError: ""
-    };
+      email: '',
+      password: '',
+      passwordConfirmation: '',
+      status: '',
+      sucessfulServerResponse: '',
+      serverError: '',
+    }
   },
   methods: {
-    submit: function() {
+    submit() {
       // this.status = "submitting";
-      this.$refs.recaptcha.execute();
+      this.$refs.recaptcha.execute()
     },
-    onCaptchaVerified: function(recaptchaToken) {
-      const self = this;
-      self.status = "submitting";
-      self.$refs.recaptcha.reset();
+    onCaptchaVerified(recaptchaToken) {
+      const self = this
+      self.status = 'submitting'
+      self.$refs.recaptcha.reset()
       axios
-        .post("https://vue-recaptcha-demo.herokuapp.com/signup", {
-          email: self.email,
-          password: self.password,
-          recaptchaToken: recaptchaToken
+        .post('https://vue-recaptcha-demo.herokuapp.com/signup', {
+          recaptchaToken: recaptchaToken,
         })
         .then(response => {
-          self.sucessfulServerResponse = response.data.message;
+          self.sucessfulServerResponse = response.data.message
         })
         .catch(err => {
-          self.serverError = getErrorMessage(err);
+          self.serverError = getErrorMessage(err)
 
           //helper to get a displayable message to the user
           function getErrorMessage(err) {
-            let responseBody;
-            responseBody = err.response;
+            let responseBody
+            responseBody = err.response
             if (!responseBody) {
-              responseBody = err;
+              responseBody = err
             } else {
-              responseBody = err.response.data || responseBody;
+              responseBody = err.response.data || responseBody
             }
-            return responseBody.message || JSON.stringify(responseBody);
+            return responseBody.message || JSON.stringify(responseBody)
           }
         })
         .then(() => {
-          self.status = "";
-        });
+          self.status = ''
+        })
     },
-    onCaptchaExpired: function() {
-      this.$refs.recaptcha.reset();
-    }
-  }
-};
+    onCaptchaExpired() {
+      this.$refs.recaptcha.reset()
+    },
+  },
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
